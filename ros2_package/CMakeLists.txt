@@ -78,6 +78,9 @@ if(BUILD_TESTING)
 
   find_package(ament_cmake_clang_format REQUIRED)
   ament_clang_format(CONFIG_FILE /ros_ws/src/.clang-format)
+
+  find_package(ament_cmake_gtest REQUIRED)
+  add_subdirectory(test)
 endif()
 
 ### Export ###
