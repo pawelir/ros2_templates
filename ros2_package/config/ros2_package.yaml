@@ -1,0 +1,8 @@
+/**:
+  ros2_package:
+    ros__parameters:
+      obligatory_parameter: "parameter_value"
+      timer_frequency: 10
+
+      parameter_family:
+        parameter_1: true
