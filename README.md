@@ -1,4 +1,4 @@
-# ros2_template
+# ros2_templates
 
 The ROS 2 repository template. This repository may be used entirely as a base for your repository. Alternatively, specific components may be incorporated into your already defined repository structure to help organize things or allow implement them faster.
 
