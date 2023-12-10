@@ -13,6 +13,10 @@ ROS2Package::ROS2Package() : Node("ros2_package")
   declare_parameter("timer_frequency", 10);
   auto timer_frequency = get_parameter("timer_frequency").as_int();
 
+  declare_parameter("server_response_timeout_ms", 1000);
+  server_response_timeout_ =
+    std::chrono::milliseconds(get_parameter("server_response_timeout_ms").as_int());
+
   declare_parameter("parameter_family.parameter_1", false);
   auto family_param_1 = get_parameter("parameter_family.parameter_1").as_bool();
 
@@ -70,29 +74,28 @@ void ROS2Package::serviceCb(
 
 void ROS2Package::callService()
 {
-  if (client_->wait_for_service(std::chrono::seconds(1))) {
-    auto request = std::make_shared<SetBoolSrv::Request>();
-    request->data = true;
-
-    auto result = client_->async_send_request(request);
-    RCLCPP_DEBUG(get_logger(), "Sent request on '/namespace/set_bool' service.");
-
-    // Wait for the future result
-    if (
-      rclcpp::spin_until_future_complete(this->get_node_base_interface(), result) ==
-      rclcpp::FutureReturnCode::SUCCESS) {
-      if (result.get()->success) {
-        RCLCPP_INFO(this->get_logger(), "Service <TODO:> call is successful!");
-      } else {
-        RCLCPP_WARN(
-          this->get_logger(), "Service <TODO:> call is not successful: %s",
-          result.get()->message.c_str());
-      }
-    } else {
-      RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to call service 'checks'");
-    }
-  } else {
+  if (!client_->wait_for_service(std::chrono::seconds(1))) {
     throw std::runtime_error("Timeout on '/namespace/set_bool' - service unavailable!");
+  }
+
+  auto request = std::make_shared<SetBoolSrv::Request>();
+  request->data = true;
+
+  auto result = client_->async_send_request(request);
+  RCLCPP_DEBUG(get_logger(), "Sent request on '/namespace/set_bool' service.");
+
+  auto status = result.wait_for(server_response_timeout_);
+
+  if (status != std::future_status::ready) {
+    throw std::runtime_error("Timeout on '/namespace/set_bool' - service didn't response!");
+  }
+
+  if (result.get()->success) {
+    RCLCPP_INFO(this->get_logger(), "Service <TODO:> call is successful!");
+  } else {
+    RCLCPP_WARN(
+      this->get_logger(), "Service <TODO:> call is not successful: %s",
+      result.get()->message.c_str());
   }
 }
 

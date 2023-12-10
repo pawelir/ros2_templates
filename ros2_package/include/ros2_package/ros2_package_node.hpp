@@ -60,6 +60,9 @@ private:
    */
   void timerCb() const;
 
+  /// @brief Timeout for receiving the response form service server.
+  std::chrono::milliseconds server_response_timeout_;
+
   /// @brief Subscription of the <TODO:>
   rclcpp::Subscription<StringMsg>::SharedPtr sub_;
 
