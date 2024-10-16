@@ -1,5 +1,5 @@
-#ifndef ROS2_PACKAGE__ROS2_PACKAGE_NODE_HPP_
-#define ROS2_PACKAGE__ROS2_PACKAGE_NODE_HPP_
+#ifndef ROS2_PACKAGE_ROS2_PACKAGE_NODE_HPP_
+#define ROS2_PACKAGE_ROS2_PACKAGE_NODE_HPP_
 
 #include <rclcpp/rclcpp.hpp>
 
@@ -81,4 +81,4 @@ private:
 
 }  // namespace ros2_package
 
-#endif  // ROS2_PACKAGE__ROS2_PACKAGE_NODE_HPP_
+#endif  // ROS2_PACKAGE_ROS2_PACKAGE_NODE_HPP_
